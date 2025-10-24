@@ -1,79 +1,117 @@
-const express = require('express');
-// const fetch = require('node-fetch');
-const cors = require('cors');
-const app = express();
+import http from 'http';
+import { URL } from 'url';
 
-// Enable CORS for all routes
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'], // Add your frontend URLs
-  credentials: true
-}));
+const PORT = 3001;
 
-app.use(express.json());
+const corsHeaders = {
+  'Access-Control-Allow-Origin': 'http://localhost:5173',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Accept',
+  'Access-Control-Allow-Credentials': 'true'
+};
 
-// Health check endpoint
-app.get('/api/waitlist', (req, res) => {
-  res.status(200).json({ message: 'Waitlist endpoint - use POST to submit data' });
-});
-
-// Waitlist submission endpoint
-app.post('/api/waitlist', async (req, res) => {
-  try {
-    const { name, email } = req.body;
-
-    // Validate input
-    if (!name || !email) {
-      return res.status(400).json({
-        error: 'Name and email are required',
-        success: false
-      });
-    }
-
-    console.log('Received waitlist submission:', { name, email });
-
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwitvbGhdzt4GYwGzPQoKiQfpF0vp--BsNlGr8vQ96ha8SzYVSu-Bz1xskUhL-hHph0Yw/exec';
-
-    // Post to Google Apps Script
-    const response = await fetch(scriptUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({ name, email })
+function parseJSONBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
     });
-
-    console.log('Google Apps Script response status:', response.status);
-
-    if (!response.ok) {
-      throw new Error(`Google Apps Script returned ${response.status}: ${response.statusText}`);
-    }
-
-    const data = await response.text();
-    console.log('Google Apps Script response:', data);
-
-    // Return success response
-    res.status(200).json({
-      success: true,
-      message: 'Successfully joined waitlist',
-      data: data
+    req.on('end', () => {
+      try {
+        resolve(body ? JSON.parse(body) : {});
+      } catch (error) {
+        reject(error);
+      }
     });
+  });
+}
 
-  } catch (error) {
-    console.error('Error in waitlist submission:', error);
+function sendJSONResponse(res, statusCode, data) {
+  res.writeHead(statusCode, {
+    'Content-Type': 'application/json',
+    ...corsHeaders
+  });
+  res.end(JSON.stringify(data));
+}
 
-    // Return error response
-    res.status(500).json({
-      success: false,
-      error: 'Failed to submit to waitlist',
-      details: error.message
+function handleCORS(res) {
+  res.writeHead(200, corsHeaders);
+  res.end();
+}
+
+const server = http.createServer(async (req, res) => {
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const pathname = url.pathname;
+  const method = req.method;
+
+  if (method === 'OPTIONS') {
+    return handleCORS(res);
+  }
+
+  if (pathname === '/api/waitlist' && method === 'GET') {
+    return sendJSONResponse(res, 200, {
+      message: 'Waitlist endpoint - use POST to submit data'
     });
   }
+
+  if (pathname === '/api/waitlist' && method === 'POST') {
+    try {
+      const body = await parseJSONBody(req);
+      const { name, email, supportType } = body;
+
+      if (!name || !email || !supportType) {
+        return sendJSONResponse(res, 400, {
+          error: 'Name, email, and support type are required',
+          success: false
+        });
+      }
+
+      console.log('Received waitlist submission:', { name, email, supportType });
+
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwitvbGhdzt4GYwGzPQoKiQfpF0vp--BsNlGr8vQ96ha8SzYVSu-Bz1xskUhL-hHph0Yw/exec';
+
+      const response = await fetch(scriptUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          support: supportType,
+          timestamp: new Date().toISOString()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Google Apps Script returned ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.text();
+      console.log('Google Apps Script response:', data);
+
+      return sendJSONResponse(res, 200, {
+        success: true,
+        message: 'Successfully joined waitlist',
+        data
+      });
+    } catch (error) {
+      console.error('Error in waitlist submission:', error);
+
+      return sendJSONResponse(res, 500, {
+        success: false,
+        error: 'Failed to submit to waitlist',
+        details: error.message
+      });
+    }
+  }
+
+  sendJSONResponse(res, 404, { error: 'Route not found' });
 });
 
-// Start server
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
+
+server.listen(PORT, () => {
   console.log(`Backend server listening on port ${PORT}`);
   console.log(`CORS enabled for frontend development`);
 });

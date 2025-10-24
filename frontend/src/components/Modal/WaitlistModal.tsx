@@ -9,11 +9,12 @@ interface WaitlistModalProps {
 const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
     name: '',
-    email: ''
+    email: '',
+    supportType: 'donating books'
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
@@ -26,18 +27,23 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
 
     try {
-      console.log('Submitting waitlist form:', { name: formData.name, email: formData.email });
+      console.log('Submitting waitlist form:', {
+        name: formData.name,
+        email: formData.email,
+        support: formData.supportType,
+      });
 
       const response = await fetch('http://localhost:3001/api/waitlist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
         },
         body: JSON.stringify({
           name: formData.name,
-          email: formData.email
-        })
+          email: formData.email,
+          supportType: formData.supportType,
+        }),
       });
 
       console.log('Response status:', response.status);
@@ -50,16 +56,12 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
       const result = await response.json();
       console.log('Success response:', result);
 
-      // Reset form and close modal
-      setFormData({ name: '', email: '' });
+      setFormData({ name: '', email: '', supportType: 'donating books' });
       onClose();
-
-      // Show success message
       alert('Thank you for joining our waitlist!');
-
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert(`Error: ${error.message}`);
+      alert(`Error: ${error}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -110,6 +112,23 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
               placeholder="Enter your email"
             />
+          </div>
+
+          <div>
+            <label htmlFor="supportType" className="block text-sm font-medium text-gray-700 mb-1"> How would you like to support us? </label>
+            <select
+              id="supportType"
+              name="supportType"
+              value={formData.supportType}
+              onChange={handleInputChange}
+              required
+              disabled={isSubmitting}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+            >
+              <option value="donating books">Donating Books</option>
+              <option value="donating money">Donating Money</option>
+              <option value="others">Others</option>
+            </select>
           </div>
 
           <div className="flex gap-3 pt-4">
