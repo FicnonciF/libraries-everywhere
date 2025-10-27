@@ -1,7 +1,8 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-// import Header from '@/components/header'
+import Header from '@/components/header'
 import Home from '@/components/Page/Home'
+import Join from './components/Page/Join'
 // import About from '@/components/Page/About'
 // import Contact from '@/components/Page/Contact'
 // import Profile from '@/components/Page/Profile'
@@ -10,10 +11,10 @@ import Home from '@/components/Page/Home'
 const App: React.FC = () => {
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       <Routes>
         <Route path='/' element={<Home />} />
-        {/* <Route path='/about' element={<About />} /> */}
+        <Route path='/join' element={<Join />} />
         {/* <Route path='/contact' element={<Contact />} /> */}
         {/* <Route path='/profile' element={<Profile />} /> */}
       </Routes>
