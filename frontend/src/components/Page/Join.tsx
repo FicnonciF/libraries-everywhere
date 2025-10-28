@@ -1,11 +1,12 @@
 import { useState } from "react"
 import { Button } from "../ui/button"
+import iphone from "../../assets/iphone.webp"
 
 const Join = () => {
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
-		supportType: 'donating books'
+		supportType: ''
 	})
 	const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -51,7 +52,11 @@ const Join = () => {
 			const result = await response.json();
 			console.log('Success response:', result);
 
-			setFormData({ name: '', email: '', supportType: 'donating books' });
+			setFormData({
+				name: '',
+				email: '',
+				supportType: ''
+			});
 			alert('Thank you for joining our waitlist!');
 		} catch (error) {
 			console.error('Error submitting form:', error);
@@ -62,73 +67,84 @@ const Join = () => {
 	};
 
 	return (
-		<div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-			<div className="flex justify-between items-center mb-4">
-				<h2 className="text-2xl font-semibold">Join Our Waitlist</h2>
+		<section className="container bg-[#525354] flex items-center justify-between w-full h-screen px-20 gap-20">
+
+			{/* left section */}
+			<div className="flex-1">
+				<div className="flex flex-col justify-between items-start mb-4">
+					<p className="text-lg font-semibold font-roboto text-white">Contribute</p>
+					<h2 className="text-2xl font-semibold font-playfair text-white">Join Our Movement</h2>
+				</div>
+
+				<form onSubmit={handleSubmit} className="space-y-4">
+					<div>
+						<label htmlFor="name"
+							className="block text-sm font-medium text-white mb-1">Name</label>
+						<input
+							type="text"
+							id="name"
+							name="name"
+							value={formData.name}
+							onChange={handleInputChange}
+							required
+							disabled={isSubmitting}
+							className="w-full px-3 py-2 focus:outline-none border-b-2 border-black"
+							placeholder="Enter your name"
+						/>
+					</div>
+
+					<div>
+						<label htmlFor="email"
+							className="block text-sm font-medium text-white mb-1">Email</label>
+						<input
+							type="email"
+							id="email"
+							name="email"
+							value={formData.email}
+							onChange={handleInputChange}
+							required
+							disabled={isSubmitting}
+							className="w-full px-3 py-2 focus:outline-none border-b-2 border-black"
+							placeholder="Enter your email"
+						/>
+					</div>
+
+					<div>
+						<label htmlFor="supportType"
+							className="block text-sm font-medium text-white mb-1">How would you like to support us?</label>
+						<select
+							id="supportType"
+							name="supportType"
+							value={formData.supportType}
+							onChange={handleInputChange}
+							required
+							disabled={isSubmitting}
+							className="w-full px-3 py-2 disabled:bg-gray-100 border-b-2 border-black cursor-pointer"
+						>
+							<option value="">Select an option</option>
+							<option value="donating books">Donating Books</option>
+							<option value="donating money">Donating Money</option>
+							<option value="volunteering">Volunteering</option>
+						</select>
+					</div>
+
+					<div className="flex gap-3 pt-4">
+						<Button
+							type="submit"
+							className="w-20 h-5 bg-white rounded-full font-roboto flex items-center justify-center p-4.5 font-bold text-md text-gray-700 transition-colors shadow-md cursor-pointer"
+							disabled={isSubmitting}
+						>
+							{isSubmitting ? 'Submitting...' : 'Submit'}
+						</Button>
+					</div>
+				</form>
 			</div>
 
-			<form onSubmit={handleSubmit} className="space-y-4">
-				<div>
-					<label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1"> Name </label>
-					<input
-						type="text"
-						id="name"
-						name="name"
-						value={formData.name}
-						onChange={handleInputChange}
-						required
-						disabled={isSubmitting}
-						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-						placeholder="Enter your name"
-					/>
-				</div>
-
-				<div>
-					<label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1"> Email </label>
-					<input
-						type="email"
-						id="email"
-						name="email"
-						value={formData.email}
-						onChange={handleInputChange}
-						required
-						disabled={isSubmitting}
-						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-						placeholder="Enter your email"
-					/>
-				</div>
-
-				<div>
-					<label htmlFor="supportType" className="block text-sm font-medium text-gray-700 mb-1">
-						How would you like to support us?
-					</label>
-					<select
-						id="supportType"
-						name="supportType"
-						value={formData.supportType}
-						onChange={handleInputChange}
-						required
-						disabled={isSubmitting}
-						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-					>
-						<option value="" disabled>Select an option</option>
-						<option value="donating books">Donating Books</option>
-						<option value="donating money">Donating Money</option>
-						<option value="volunteering">Volunteering</option>
-					</select>
-				</div>
-
-				<div className="flex gap-3 pt-4">
-					<Button
-						type="submit"
-						className="flex-1 cursor-pointer hover:bg-black hover:text-white"
-						disabled={isSubmitting}
-					>
-						{isSubmitting ? 'Submitting...' : 'Join Waitlist'}
-					</Button>
-				</div>
-			</form>
-		</div>
+			{/* right section */}
+			<div className="flex-1 flex items-center justify-center">
+				<img src={iphone} alt="" width={300} />
+			</div>
+		</section>
 	)
 }
 
