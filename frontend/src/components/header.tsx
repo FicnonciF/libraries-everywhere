@@ -7,7 +7,7 @@ const Header: React.FC = () => {
 		<>
 			<header className='mx-20 pt-10 flex justify-between items-start fixed top-0 left-0 right-0 z-50'>
 				<Link to="/">
-					<img src={logo} alt="" width={120} className='invert' />
+					<img src={logo} alt="" width={150} className='invert' />
 				</Link>
 
 				<nav className='flex gap-4'>
