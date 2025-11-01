@@ -1,12 +1,10 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Header from '@/components/header'
+import Header from '@/components/Header'
 import Home from '@/components/Page/Home'
-import Join from './components/Page/Join'
-// import About from '@/components/Page/About'
-// import Contact from '@/components/Page/Contact'
-// import Profile from '@/components/Page/Profile'
-// import Footer from '@/components/footer'
+import Join from '@/components/Page/Join'
+import Contributer from '@/components/Page/Contributer'
+import Footer from '@/components/Footer'
 
 const App: React.FC = () => {
   return (
@@ -15,10 +13,9 @@ const App: React.FC = () => {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/join' element={<Join />} />
-        {/* <Route path='/contact' element={<Contact />} /> */}
-        {/* <Route path='/profile' element={<Profile />} /> */}
+        <Route path='/contributer' element={<Contributer />} />
       </Routes>
-      {/* <Footer /> */}
+      <Footer />
     </>
   )
 }

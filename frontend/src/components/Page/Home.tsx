@@ -24,7 +24,7 @@ type CarouselItem = {
 const PrevArrow = ({ className, style, onClick }: ArrowProps) => (
   <button
     className={`${className} !flex items-center justify-center w-10 h-10 rounded-full bg-black bg-opacity-50 hover:bg-opacity-75 transition-all duration-200 !z-10`}
-    style={{ ...style, left: '20px', bottom: '0px' }}
+    style={{ ...style, left: '80px', bottom: '0px' }}
     onClick={onClick}
     aria-label="Previous slide"
   >
@@ -35,7 +35,7 @@ const PrevArrow = ({ className, style, onClick }: ArrowProps) => (
 const NextArrow = ({ className, style, onClick }: ArrowProps) => (
   <button
     className={`${className} !flex items-center justify-center w-10 h-10 rounded-full bg-black bg-opacity-50 hover:bg-opacity-75 transition-all duration-200 !z-10`}
-    style={{ ...style, left: '70px', bottom: '0px' }}
+    style={{ ...style, left: '120px', bottom: '0px' }}
     onClick={onClick}
     aria-label="Next slide"
   >
@@ -69,24 +69,18 @@ const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.3
-    }
-  }
-};
+    transition: { staggerChildren: 0.2, delayChildren: 0.3 },
+  },
+  exit: {
+    opacity: 0,
+    transition: { staggerChildren: 0.1, when: 'afterChildren' },
+  },
+} as const;
 
 const itemVariants = {
   hidden: { opacity: 0, y: 30 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: 'spring',
-      damping: 15,
-      stiffness: 100
-    }
-  }
+  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  exit: { opacity: 0, y: -30, transition: { duration: 0.3 } },
 };
 
 const Home = () => {
@@ -120,6 +114,7 @@ const Home = () => {
             <div key={`slide-${index}`} className="relative h-screen w-full">
               <div className="absolute inset-0 bg-black bg-opacity-50">
                 <motion.img
+                  key={`bg-${index}-${currentSlide}`}
                   src={item.image}
                   alt={item.title}
                   initial={{ scale: 1.1 }}
@@ -140,7 +135,7 @@ const Home = () => {
                     key={`content-${index}-${currentSlide}`}
                     variants={containerVariants}
                     initial="hidden"
-                    animate="show"
+                    animate="show" exit="exit"
                     className="space-y-4 md:space-y-6 max-w-4xl"
                   >
                     <motion.h2

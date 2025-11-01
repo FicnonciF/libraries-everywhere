@@ -1,6 +1,6 @@
 import React from 'react'
 import logo from '@/assets/Logo.svg'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const Header: React.FC = () => {
 	return (
@@ -11,10 +11,17 @@ const Header: React.FC = () => {
 				</Link>
 
 				<nav className='flex gap-4'>
-					<Link to="/join"
-						className='w-20 h-5 bg-white rounded-full font-roboto flex items-center justify-center p-4.5 font-bold text-md text-gray-700 hover:text-gray-600 transition-colors shadow-md'>
-						Join
-					</Link>
+					{useLocation().pathname === '/join' ? (
+						<Link to="/"
+							className='w-20 h-5 bg-white rounded-full font-roboto flex items-center justify-center p-4.5 font-bold text-md text-gray-700 hover:text-gray-600 transition-colors shadow-md'>
+							Home
+						</Link>
+					) : (
+						<Link to="/join"
+							className='w-20 h-5 bg-white rounded-full font-roboto flex items-center justify-center p-4.5 font-bold text-md text-gray-700 hover:text-gray-600 transition-colors shadow-md'>
+							Join
+						</Link>
+					)}
 				</nav>
 			</header>
 		</>
