@@ -3,7 +3,8 @@ import { Routes, Route } from 'react-router-dom'
 import Header from '@/components/Header'
 import Home from '@/components/Page/Home'
 import Join from '@/components/Page/Join'
-import Contributer from '@/components/Page/Contributer'
+import Contributor from '@/components/Page/Contributor'
+import NotFound from '@/components/Page/NotFound'
 import Footer from '@/components/Footer'
 
 const App: React.FC = () => {
@@ -13,7 +14,8 @@ const App: React.FC = () => {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/join' element={<Join />} />
-        <Route path='/contributer' element={<Contributer />} />
+        <Route path='/contributor' element={<Contributor />} />
+        <Route path='*' element={<NotFound />} />
       </Routes>
       <Footer />
     </>

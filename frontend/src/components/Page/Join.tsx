@@ -70,16 +70,16 @@ const Join = () => {
 		<section className="container bg-[#525354] flex items-center justify-between w-full h-screen px-20 gap-20">
 
 			{/* left section */}
-			<div className="flex-1">
+			<div className="flex-1 md:mt-15">
 				<div className="flex flex-col justify-between items-start mb-4">
-					<p className="text-lg font-semibold font-roboto text-white">Contribute</p>
-					<h2 className="text-2xl font-semibold font-playfair text-white">Join Our Movement</h2>
+					<p className="text-2xl md:text-3xl font-roboto font-medium text-white">Contribute</p>
+					<h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold font-playfair text-white">Join Our Movement</h2>
 				</div>
 
-				<form onSubmit={handleSubmit} className="space-y-4">
+				<form onSubmit={handleSubmit} className="space-y-4 md:mt-5">
 					<div>
 						<label htmlFor="name"
-							className="block text-sm font-medium text-white mb-1">Name</label>
+							className="block font-roboto text-xl font-medium text-white mb-1">Name</label>
 						<input
 							type="text"
 							id="name"
@@ -88,14 +88,14 @@ const Join = () => {
 							onChange={handleInputChange}
 							required
 							disabled={isSubmitting}
-							className="w-full px-3 py-2 focus:outline-none border-b-2 border-black"
+							className="w-full px-3 py-2 focus:outline-none border-b-2 border-white text-white placeholder:text-white"
 							placeholder="Enter your name"
 						/>
 					</div>
 
 					<div>
 						<label htmlFor="email"
-							className="block text-sm font-medium text-white mb-1">Email</label>
+							className="block font-roboto text-xl font-medium text-white mb-1">Email</label>
 						<input
 							type="email"
 							id="email"
@@ -104,14 +104,14 @@ const Join = () => {
 							onChange={handleInputChange}
 							required
 							disabled={isSubmitting}
-							className="w-full px-3 py-2 focus:outline-none border-b-2 border-black"
+							className="w-full px-3 py-2 focus:outline-none border-b-2 border-white text-white placeholder:text-white"
 							placeholder="Enter your email"
 						/>
 					</div>
 
 					<div>
 						<label htmlFor="supportType"
-							className="block text-sm font-medium text-white mb-1">How would you like to support us?</label>
+							className="block font-roboto text-xl font-medium text-white mb-1">How would you like to support us?</label>
 						<select
 							id="supportType"
 							name="supportType"
@@ -119,7 +119,7 @@ const Join = () => {
 							onChange={handleInputChange}
 							required
 							disabled={isSubmitting}
-							className="w-full px-3 py-2 disabled:bg-gray-100 border-b-2 border-black cursor-pointer"
+							className="w-full px-3 py-2 disabled:bg-gray-100 border-b-2 border-white cursor-pointer text-white bg-transparent [&>option]:text-gray-800 [&>option]:bg-white"
 						>
 							<option value="">Select an option</option>
 							<option value="donating books">Donating Books</option>

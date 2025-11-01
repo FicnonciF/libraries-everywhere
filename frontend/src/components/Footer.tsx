@@ -4,19 +4,19 @@ import { Link, useLocation } from 'react-router-dom'
 const Footer: React.FC = () => {
 	const email = "info@librarieseverywhere.com";
 	const location = useLocation();
-	const [isContributer, setIsContributer] = useState(false);
+	const [isContributor, setIsContributor] = useState(false);
 
 	useEffect(() => {
-		setIsContributer(location.pathname === "/contributer");
+		setIsContributor(location.pathname === "/contributor");
 	}, [location.pathname]);
 
 	return (
 		<footer className='absolute bottom-2 right-0 z-50'>
-			<div className='mr-10 flex justify-between items-start text-white font-bold'>
-				{isContributer ? (
+			<div className='text-sm md:text-lg md:font-semibold font-bold mr-10 flex justify-between items-start text-white'>
+				{isContributor ? (
 					<Link to="/join" className='mx-2'>Join</Link>
 				) : (
-					<Link to="/contributer" className='mx-2'>Current Donors</Link>
+					<Link to="/contributor" className='mx-2'>Contributors</Link>
 				)} |
 				<a
 					href={`mailto:${email}`}
