@@ -1,7 +1,8 @@
 import React from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { type ArrowControlsProps } from '@/types'
 
-const ArrowControls: React.FC<{ onPrev: () => void; onNext: () => void; className?: string; }> = ({ onPrev, onNext, className = '', }) => (
+const ArrowControls: React.FC<ArrowControlsProps> = ({ onPrev, onNext, className = '' }) => (
 	<div className={`hidden md:flex items-center gap-6 text-white/90 ${className}`}>
 		<button
 			type="button"
@@ -21,4 +22,5 @@ const ArrowControls: React.FC<{ onPrev: () => void; onNext: () => void; classNam
 		</button>
 	</div>
 );
+
 export default ArrowControls

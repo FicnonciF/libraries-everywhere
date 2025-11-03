@@ -1,19 +1,13 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Slider, { Settings } from 'react-slick';
+import Slider, { type Settings } from 'react-slick';
+import { type CarouselItem } from '@/types';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slide_1 from '@/assets/slide-1.jpg';
 import Slide_2 from '@/assets/slide-2.jpg';
 import Slide_3 from '@/assets/slide-3.png';
 import ArrowControls from '@/components/ArrowControls';
-
-type CarouselItem = {
-  image: string;
-  head: string;
-  title: string;
-  subtitle: string;
-};
 
 const carouselItems: CarouselItem[] = [
   {
@@ -134,7 +128,7 @@ const Home = () => {
             </div>
           ))}
         </Slider>
-        <div className="absolute inset-x-0 bottom-50 z-20 pl-5 sm:pl-12 md:pl-20">
+        <div className="absolute inset-x-0 bottom-36 z-20 pl-6 sm:pl-12 md:pl-20">
           <ArrowControls
             onPrev={() => sliderRef.current?.slickPrev()}
             onNext={() => sliderRef.current?.slickNext()}

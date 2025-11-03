@@ -1,9 +1,11 @@
 import { useState } from "react"
 import { Button } from "../ui/button"
 import iphone from "../../assets/iphone.webp"
+import { sectionTitle, h1Title } from '@/styles/typography'
+import { type WaitlistFormData } from '@/types'
 
 const Join = () => {
-	const [formData, setFormData] = useState({
+	const [formData, setFormData] = useState<WaitlistFormData>({
 		name: '',
 		email: '',
 		supportType: ''
@@ -67,13 +69,13 @@ const Join = () => {
 	};
 
 	return (
-		<section className="container bg-[#525354] flex items-center justify-between w-full h-screen px-20 gap-20">
+		<section className="bg-[#525354] w-full min-h-screen px-6 sm:px-12 md:px-20 pt-52 flex flex-col md:flex-row items-start md:items-start justify-between gap-10 md:gap-16">
 
 			{/* left section */}
-			<div className="flex-1 md:mt-15">
+			<div className="w-full md:flex-1">
 				<div className="flex flex-col justify-between items-start mb-4">
-					<p className="text-2xl md:text-3xl font-roboto font-medium text-white">Contribute</p>
-					<h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold font-playfair text-white">Join Our Movement</h2>
+					<p className={`${sectionTitle} text-white`}>Contribute</p>
+					<h2 className={`${h1Title} text-white`}>Join Our Movement</h2>
 				</div>
 
 				<form onSubmit={handleSubmit} className="space-y-4 md:mt-5">
@@ -88,7 +90,7 @@ const Join = () => {
 							onChange={handleInputChange}
 							required
 							disabled={isSubmitting}
-							className="w-full px-3 py-2 focus:outline-none border-b-2 border-white text-white placeholder:text-white"
+							className="w-full px-3 py-2 focus:outline-none border-b-2 border-white text-white placeholder:text-white bg-transparent"
 							placeholder="Enter your name"
 						/>
 					</div>
@@ -104,7 +106,7 @@ const Join = () => {
 							onChange={handleInputChange}
 							required
 							disabled={isSubmitting}
-							className="w-full px-3 py-2 focus:outline-none border-b-2 border-white text-white placeholder:text-white"
+							className="w-full px-3 py-2 focus:outline-none border-b-2 border-white text-white placeholder:text-white bg-transparent"
 							placeholder="Enter your email"
 						/>
 					</div>
@@ -131,7 +133,7 @@ const Join = () => {
 					<div className="flex gap-3 pt-4">
 						<Button
 							type="submit"
-							className="w-20 h-5 bg-white rounded-full font-roboto flex items-center justify-center p-4.5 font-bold text-md text-gray-700 transition-colors shadow-md cursor-pointer"
+							className="min-w-24 bg-white rounded-full font-roboto flex items-center justify-center px-4 py-2 font-bold text-base md:text-lg text-gray-700 transition-colors shadow-md cursor-pointer"
 							disabled={isSubmitting}
 						>
 							{isSubmitting ? 'Submitting...' : 'Submit'}
@@ -141,8 +143,8 @@ const Join = () => {
 			</div>
 
 			{/* right section */}
-			<div className="flex-1 flex items-center justify-center">
-				<img src={iphone} alt="" width={300} />
+			<div className="hidden md:flex md:flex-1 items-center justify-center">
+				<img src={iphone} alt="" className="lg:w-64 h-auto" />
 			</div>
 		</section>
 	)
