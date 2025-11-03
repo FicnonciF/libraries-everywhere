@@ -1,18 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Slider, { Settings } from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Slide_1 from '../../assets/slide-1.jpg';
-import Slide_2 from '../../assets/slide-2.jpg';
-import Slide_3 from '../../assets/slide-3.png';
-
-type ArrowProps = {
-  className?: string;
-  style?: React.CSSProperties;
-  onClick?: () => void;
-};
+import Slide_1 from '@/assets/slide-1.jpg';
+import Slide_2 from '@/assets/slide-2.jpg';
+import Slide_3 from '@/assets/slide-3.png';
+import ArrowControls from '@/components/ArrowControls';
 
 type CarouselItem = {
   image: string;
@@ -20,28 +14,6 @@ type CarouselItem = {
   title: string;
   subtitle: string;
 };
-
-const PrevArrow = ({ className, style, onClick }: ArrowProps) => (
-  <button
-    className={`${className} !flex items-center justify-center w-10 h-10 rounded-full bg-black bg-opacity-50 hover:bg-opacity-75 transition-all duration-200 !z-10`}
-    style={{ ...style, left: '80px', bottom: '0px' }}
-    onClick={onClick}
-    aria-label="Previous slide"
-  >
-    <ChevronLeft className="text-white" />
-  </button>
-);
-
-const NextArrow = ({ className, style, onClick }: ArrowProps) => (
-  <button
-    className={`${className} !flex items-center justify-center w-10 h-10 rounded-full bg-black bg-opacity-50 hover:bg-opacity-75 transition-all duration-200 !z-10`}
-    style={{ ...style, left: '120px', bottom: '0px' }}
-    onClick={onClick}
-    aria-label="Next slide"
-  >
-    <ChevronRight className="text-white" />
-  </button>
-);
 
 const carouselItems: CarouselItem[] = [
   {
@@ -86,6 +58,8 @@ const itemVariants = {
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  const sliderRef = useRef<Slider | null>(null);
+
   const settings: Settings = {
     dots: false,
     infinite: true,
@@ -94,22 +68,20 @@ const Home = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 7000,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
     beforeChange: (_, next) => setCurrentSlide(next),
     pauseOnHover: false,
     cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)',
     fade: true,
     pauseOnFocus: false,
     swipeToSlide: true,
-    draggable: true,
+    draggable: false,
     touchThreshold: 10,
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 overflow-x-hidden">
       <div className="h-screen w-full relative">
-        <Slider {...settings} className="h-full">
+        <Slider ref={sliderRef} {...settings} className="h-full">
           {carouselItems.map((item, index) => (
             <div key={`slide-${index}`} className="relative h-screen w-full">
               <div className="absolute inset-0 bg-black bg-opacity-50">
@@ -162,6 +134,12 @@ const Home = () => {
             </div>
           ))}
         </Slider>
+        <div className="absolute inset-x-0 bottom-50 z-20 pl-5 sm:pl-12 md:pl-20">
+          <ArrowControls
+            onPrev={() => sliderRef.current?.slickPrev()}
+            onNext={() => sliderRef.current?.slickNext()}
+          />
+        </div>
       </div>
     </div>
   );
