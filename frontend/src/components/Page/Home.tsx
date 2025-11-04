@@ -4,9 +4,9 @@ import Slider, { type Settings } from 'react-slick';
 import { type CarouselItem } from '@/types';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Slide_1 from '@/assets/slide-1.jpg';
-import Slide_2 from '@/assets/slide-2.jpg';
-import Slide_3 from '@/assets/slide-3.png';
+import Slide_1 from '@/assets/slide-1.webp';
+import Slide_2 from '@/assets/slide-2.webp';
+import Slide_3 from '@/assets/slide-3.webp';
 import ArrowControls from '@/components/ArrowControls';
 
 const carouselItems: CarouselItem[] = [
