@@ -106,7 +106,7 @@ const Home = () => {
                   >
                     <motion.h2
                       variants={itemVariants}
-                      className="text-2xl md:text-3xl font-roboto font-bold text-white drop-shadow-lg"
+                      className="text-2xl md:text-3xl font-roboto font-bold text-white drop-shadow-lg uppercase"
                     >
                       {item.head}
                     </motion.h2>
