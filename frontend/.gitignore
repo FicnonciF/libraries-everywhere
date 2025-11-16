@@ -22,3 +22,19 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Env files (keep local secrets out of git)
+.env
+.env.local
+.env.*.local
+
+# Caches / tool artifacts
+.eslintcache
+.tsbuildinfo
+.turbo
+.parcel-cache
+coverage
+
+# Mac/OS junk (additional)
+.AppleDouble
+.LSOverride

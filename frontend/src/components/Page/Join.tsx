@@ -12,6 +12,8 @@ const Join = () => {
 	})
 	const [isSubmitting, setIsSubmitting] = useState(false)
 
+	const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const { name, value } = e.target
 		setFormData(prev => ({
@@ -31,7 +33,7 @@ const Join = () => {
 				support: formData.supportType,
 			});
 
-			const response = await fetch('http://localhost:3001/api/waitlist', {
+			const response = await fetch(`${API_BASE}/api/waitlist`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
