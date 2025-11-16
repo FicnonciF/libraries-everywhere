@@ -1,21 +1,23 @@
 import http from 'http';
 import { URL } from 'url';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const PORT = 3001;
+const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
 
 // CORS configuration
-const allowedOrigins = new Set([
-  'http://localhost:5173',
-  'http://librarieseverywhere.com',
-  'https://librarieseverywhere.com',
-  'https://librarieseverywhere.netlify.app'
-]);
+const originsEnv = (process.env.ALLOWED_ORIGINS || '').trim();
+const allowedOrigins = new Set(
+  originsEnv ? originsEnv.split(',').map(s => s.trim()).filter(Boolean) : []
+);
 
 function buildCorsHeaders(req) {
   const origin = req.headers.origin;
+  const reqMethod = req.headers['access-control-request-method'];
+  const reqHeaders = req.headers['access-control-request-headers'];
   const headers = {
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Accept',
+    'Access-Control-Allow-Methods': reqMethod || 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': reqHeaders || 'Content-Type, Accept',
     'Access-Control-Allow-Credentials': 'true',
     'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Request-Private-Network'
   };
@@ -94,7 +96,7 @@ const server = http.createServer(async (req, res) => {
 
       console.log('Received waitlist submission:', { name, email, supportType });
 
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwitvbGhdzt4GYwGzPQoKiQfpF0vp--BsNlGr8vQ96ha8SzYVSu-Bz1xskUhL-hHph0Yw/exec';
+      const scriptUrl = process.env.GOOGLE_SCRIPT_URL;
 
       const response = await fetch(scriptUrl, {
         method: 'POST',
@@ -135,7 +137,6 @@ const server = http.createServer(async (req, res) => {
 
   sendJSONResponse(res, 404, { error: 'Route not found' });
 });
-
 
 server.listen(PORT, () => {
   console.log(`Backend server listening on port ${PORT}`);
