@@ -3,12 +3,34 @@ import { URL } from 'url';
 
 const PORT = 3001;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': 'http://localhost:5173',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Accept',
-  'Access-Control-Allow-Credentials': 'true'
-};
+// CORS configuration
+const allowedOrigins = new Set([
+  'http://localhost:5173',
+  'http://librarieseverywhere.com',
+  'https://librarieseverywhere.com',
+  'https://librarieseverywhere.netlify.app'
+]);
+
+function buildCorsHeaders(req) {
+  const origin = req.headers.origin;
+  const headers = {
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Accept',
+    'Access-Control-Allow-Credentials': 'true',
+    'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Request-Private-Network'
+  };
+
+  if (origin && allowedOrigins.has(origin)) {
+    headers['Access-Control-Allow-Origin'] = origin;
+  }
+
+  // If the browser requests private network access, explicitly allow it on preflight
+  if (req.method === 'OPTIONS' && 'access-control-request-private-network' in (req.headers || {})) {
+    headers['Access-Control-Allow-Private-Network'] = 'true';
+  }
+
+  return headers;
+}
 
 function parseJSONBody(req) {
   return new Promise((resolve, reject) => {
@@ -27,15 +49,19 @@ function parseJSONBody(req) {
 }
 
 function sendJSONResponse(res, statusCode, data) {
+  // Note: build CORS headers per request to reflect Origin
+  const cors = buildCorsHeaders(res.req);
   res.writeHead(statusCode, {
     'Content-Type': 'application/json',
-    ...corsHeaders
+    ...cors
   });
   res.end(JSON.stringify(data));
 }
 
-function handleCORS(res) {
-  res.writeHead(200, corsHeaders);
+function handleCORS(req, res) {
+  const cors = buildCorsHeaders(req);
+  // Respond with no body for preflight
+  res.writeHead(204, cors);
   res.end();
 }
 
@@ -45,7 +71,7 @@ const server = http.createServer(async (req, res) => {
   const method = req.method;
 
   if (method === 'OPTIONS') {
-    return handleCORS(res);
+    return handleCORS(req, res);
   }
 
   if (pathname === '/api/waitlist' && method === 'GET') {
