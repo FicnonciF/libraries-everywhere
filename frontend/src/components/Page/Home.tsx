@@ -75,15 +75,8 @@ const Home = () => {
     initial: {
       scale: index % 2 === 0 ? 1.2 : 1,
       willChange: 'transform'
-    },
-    animate: {
-      scale: 1.1,
-      transition: {
-        duration: isMobile ? 3 : 5,
-        ease: 'linear'
-      }
     }
-  }), [isMobile]);
+  }), []);
 
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
@@ -97,6 +90,13 @@ const Home = () => {
                   src={item.image}
                   alt={item.title}
                   {...getImageAnimation(index)}
+                  animate={{
+                    scale: 1.1,
+                    transition: {
+                      duration: isMobile ? 3 : 5,
+                      ease: 'linear'
+                    }
+                  }}
                   className="w-full h-full object-cover will-change-transform"
                   loading="lazy"
                 />
