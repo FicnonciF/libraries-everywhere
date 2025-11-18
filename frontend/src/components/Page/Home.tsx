@@ -1,36 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Slider, { type Settings } from 'react-slick';
-import { type CarouselItem } from '@/types';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Slide_1 from '@/assets/slide-1.webp';
-import Slide_2 from '@/assets/slide-2.webp';
-import Slide_3 from '@/assets/slide-3.webp';
 import ArrowControls from '@/components/ArrowControls';
+import { carouselItems } from '@/data/home';
 
-const carouselItems: CarouselItem[] = [
-  {
-    image: Slide_1,
-    head: 'The issue',
-    title: 'Reading a book shouldn’t break the bank.',
-    subtitle: "The publishing industry is broken. Books cost a lot, despite the Government making books tax-free. Reading will die, or remain an act for the elite few who could afford those exorbitant prices."
-  },
-  {
-    image: Slide_2,
-    head: 'The solution',
-    title: 'Free books, & libraries everywhere!',
-    subtitle: "We're on a mission to make books available for free to read, and have libraries pop-up everywhere. So, we, the people, can try books, read, return, repeat. And reading can become for the masses."
-  },
-  {
-    image: Slide_3,
-    head: 'Join the movement',
-    title: 'Calling all fellow readers to join us & save the world.',
-    subtitle: 'We’re on a lookout for readers who’d support us in our mission to get free books and libraries everywhere. Join us if you have books, money, or best wishes to give us.'
-  }
-];
-
-// Animation variants for text elements
 const containerVariants = {
   hidden: { opacity: 0 },
   show: {
@@ -51,17 +26,32 @@ const itemVariants = {
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  const [isMobile, setIsMobile] = useState(false);
   const sliderRef = useRef<Slider | null>(null);
 
-  const settings: Settings = {
+  // Check for mobile view on mount and window resize
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Initial check
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+
+  // Memoize settings to prevent unnecessary recalculations
+  const settings: Settings = useMemo(() => ({
     dots: false,
     infinite: true,
     speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 7000,
+    autoplaySpeed: 5000,
     beforeChange: (_, next) => setCurrentSlide(next),
     pauseOnHover: false,
     cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)',
@@ -70,7 +60,30 @@ const Home = () => {
     swipeToSlide: true,
     draggable: false,
     touchThreshold: 10,
-  };
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          speed: 800, // Slightly faster transition on mobile
+        }
+      }
+    ]
+  }), []);
+
+  // Memoize the animation variants
+  const getImageAnimation = useCallback((index: number) => ({
+    initial: {
+      scale: index % 2 === 0 ? 1.2 : 1,
+      willChange: 'transform'
+    },
+    animate: {
+      scale: 1.1,
+      transition: {
+        duration: isMobile ? 3 : 5,
+        ease: 'linear'
+      }
+    }
+  }), [isMobile]);
 
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
@@ -83,15 +96,8 @@ const Home = () => {
                   key={`bg-${index}-${currentSlide}`}
                   src={item.image}
                   alt={item.title}
-                  initial={{ scale: 1.1 }}
-                  animate={{
-                    scale: 1,
-                    transition: {
-                      duration: 8,
-                      ease: 'linear'
-                    }
-                  }}
-                  className="w-full h-full object-cover"
+                  {...getImageAnimation(index)}
+                  className="w-full h-full object-cover will-change-transform"
                   loading="lazy"
                 />
               </div>
@@ -106,7 +112,7 @@ const Home = () => {
                   >
                     <motion.h2
                       variants={itemVariants}
-                      className="text-2xl md:text-3xl font-roboto font-bold text-white drop-shadow-lg uppercase"
+                      className="text-2xl md:text-3xl font-roboto text-white drop-shadow-lg uppercase"
                     >
                       {item.head}
                     </motion.h2>

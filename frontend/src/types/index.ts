@@ -16,3 +16,8 @@ export type WaitlistFormData = {
   email: string;
   supportType: string;
 };
+
+export type Contributor = {
+  name: string;
+  image: string;
+};

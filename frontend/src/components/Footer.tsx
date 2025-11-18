@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
 	const [isContributor, setIsContributor] = useState(false);
 
 	useEffect(() => {
-		setIsContributor(location.pathname === "/contributor");
+		setIsContributor(location.pathname === "/contributors");
 	}, [location.pathname]);
 
 	return (
@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
 				{isContributor ? (
 					<Link to="/join" className='mx-1 hover:underline'>Join</Link>
 				) : (
-					<Link to="/contributor" className='mx-1 hover:underline'>Contributors</Link>
+					<Link to="/contributors" className='mx-1 hover:underline'>Contributors</Link>
 				)}
 				<span className='opacity-70'>|</span>
 				<a
